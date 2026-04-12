@@ -11,16 +11,16 @@ export default function Login() {
       <div className="absolute top-1/2 left-1/2 w-120 h-120 bg-yellow-400/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
 
       {/* Main Card */}
-      <div className="relative z-10 w-full max-w-lg rounded-4xl border border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_0_60px_rgba(251,146,60,0.15)] p-10">
-        <p className="text-center text-sm tracking-[0.4em] text-orange-200 mb-2">
+      <div className="relative z-10 w-full max-w-lg rounded-4xl border border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_0_60px_rgba(251,146,60,0.15)] p-8 md:p-10">
+        <p className="text-center text-sm tracking-[0.35em] text-orange-200 mb-2">
           IERT PRESENTS
         </p>
 
-        <h1 className="text-5xl md:text-6xl font-extrabold text-center bg-linear-to-r from-yellow-300 via-orange-400 to-red-500 bg-clip-text text-transparent mb-3">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-center bg-linear-to-r from-yellow-300 via-orange-400 to-red-500 bg-clip-text text-transparent mb-3">
           NAVRANG'26
         </h1>
 
-        <p className="text-center text-lg text-gray-200 font-medium mb-1">
+        <p className="text-center text-base md:text-lg text-gray-200 font-medium mb-1">
           Freshers Celebration Portal
         </p>
 
@@ -30,20 +30,26 @@ export default function Login() {
         </p>
 
         {/* Event Info */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-8">
           <div className="rounded-2xl bg-white/5 p-3 text-center border border-white/10">
             <p className="text-xs text-orange-200">Date</p>
-            <p className="text-sm font-semibold text-white">03 Apr</p>
+            <p className="text-xs sm:text-sm font-semibold text-white">
+              03 Apr
+            </p>
           </div>
 
           <div className="rounded-2xl bg-white/5 p-3 text-center border border-white/10">
             <p className="text-xs text-orange-200">Venue</p>
-            <p className="text-sm font-semibold text-white">Auditorium</p>
+            <p className="text-xs sm:text-sm font-semibold text-white">
+              Auditorium
+            </p>
           </div>
 
           <div className="rounded-2xl bg-white/5 p-3 text-center border border-white/10">
             <p className="text-xs text-orange-200">Access</p>
-            <p className="text-sm font-semibold text-white">QR Pass</p>
+            <p className="text-xs sm:text-sm font-semibold text-white">
+              QR Pass
+            </p>
           </div>
         </div>
 

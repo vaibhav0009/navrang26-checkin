@@ -69,13 +69,19 @@ export default function StudentLogin() {
             className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
           />
 
-          <input
-            type="date"
-            name="dob"
-            value={loginData.dob}
-            onChange={handleChange}
-            className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
-          />
+          <div>
+            <label className="block text-sm text-orange-200 mb-2">
+              Date of Birth
+            </label>
+
+            <input
+              type="date"
+              name="dob"
+              value={loginData.dob}
+              onChange={handleChange}
+              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
+            />
+          </div>
 
           <button
             type="submit"
@@ -84,8 +90,6 @@ export default function StudentLogin() {
             Access My Pass
           </button>
         </form>
-
-        
       </div>
     </div>
   );
