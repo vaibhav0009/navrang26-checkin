@@ -5,8 +5,11 @@ import toast from "react-hot-toast";
 import { db } from "../firebase";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default function AddStudent() {
   const navigate = useNavigate();
+  const auth = getAuth();
 
   const [student, setStudent] = useState({
     name: "",
@@ -15,12 +18,14 @@ export default function AddStudent() {
   });
 
   useEffect(() => {
-    const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/admin-login");
+      }
+    });
 
-    if (!isAdminLoggedIn) {
-      navigate("/admin-login");
-    }
-  }, [navigate]);
+    return () => unsubscribe();
+  }, [auth, navigate]);
 
   const handleChange = (e) => {
     setStudent((prev) => ({

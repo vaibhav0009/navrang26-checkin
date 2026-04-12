@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 export default function AdminLogin() {
   const navigate = useNavigate();
 
@@ -10,6 +12,8 @@ export default function AdminLogin() {
     password: "",
   });
 
+  const auth = getAuth();
+
   const handleChange = (e) => {
     setAdminData({
       ...adminData,
@@ -17,24 +21,27 @@ export default function AdminLogin() {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (
-      adminData.email === "admin@navrang.com" &&
-      adminData.password === "admin123"
-    ) {
-      localStorage.setItem("adminLoggedIn", "true");
+    try {
+      await signInWithEmailAndPassword(
+        auth,
+        adminData.email,
+        adminData.password,
+      );
+
       toast.success("Admin Login Successful!");
+
       navigate("/admin");
-    } else {
+    } catch (error) {
+      console.error(error);
       toast.error("Invalid Admin Credentials");
     }
   };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] flex items-center justify-center px-4">
-      {/* Background Glow */}
       <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
 
@@ -58,7 +65,7 @@ export default function AdminLogin() {
             placeholder="Admin Email"
             value={adminData.email}
             onChange={handleChange}
-            className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
+            className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
           />
 
           <input
@@ -67,7 +74,7 @@ export default function AdminLogin() {
             placeholder="Password"
             value={adminData.password}
             onChange={handleChange}
-            className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
+            className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
           />
 
           <button
@@ -77,7 +84,6 @@ export default function AdminLogin() {
             Access Dashboard
           </button>
         </form>
-
       </div>
     </div>
   );

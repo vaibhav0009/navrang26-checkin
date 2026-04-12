@@ -5,22 +5,27 @@ import toast from "react-hot-toast";
 import { db } from "../firebase";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default function AllStudents() {
   const navigate = useNavigate();
+  const auth = getAuth();
 
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const isAdminLoggedIn = localStorage.getItem("adminLoggedIn");
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/admin-login");
+        return;
+      }
 
-    if (!isAdminLoggedIn) {
-      navigate("/admin-login");
-      return;
-    }
+      fetchStudents();
+    });
 
-    fetchStudents();
-  }, [navigate]);
+    return () => unsubscribe();
+  }, [auth, navigate]);
 
   const fetchStudents = async () => {
     try {
