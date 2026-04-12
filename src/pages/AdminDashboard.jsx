@@ -18,16 +18,25 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0B1026] via-[#1A103D] to-[#2E1065] px-6 py-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Top Bar */}
-        <div className="flex justify-between items-center mb-10">
+    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] px-6 py-8">
+      {/* Background Glow */}
+      <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
+
+      <div className="relative z-10 max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
           <div>
-            <h1 className="text-4xl font-bold text-yellow-400">
-              Admin Dashboard
+            <p className="text-orange-200 tracking-[0.3em] text-sm mb-2">
+              NAVRANG'26 ADMIN
+            </p>
+
+            <h1 className="text-4xl font-bold bg-linear-to-r from-yellow-300 via-orange-400 to-red-500 bg-clip-text text-transparent">
+              Control Dashboard
             </h1>
-            <p className="text-purple-200 mt-1">
-              Manage Student Check-In System
+
+            <p className="text-gray-300 mt-2">
+              Manage attendees, registrations and event access
             </p>
           </div>
 
@@ -39,30 +48,38 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* Action Buttons */}
+        {/* Stats / Info Cards */}
+        
+
+        {/* Main Action Cards */}
         <div className="grid md:grid-cols-2 gap-6">
           <button
             onClick={() => navigate("/admin/add-student")}
-            className="bg-linear-to-r from-purple-500 to-fuchsia-500 p-8 rounded-3xl text-left shadow-xl hover:scale-[1.02] transition"
+            className="rounded-3xl bg-linear-to-r from-orange-500 to-red-500 p-8 text-left shadow-xl hover:scale-[1.02] transition"
           >
+            <p className="text-sm text-orange-100 mb-2">REGISTRATION</p>
+
             <h2 className="text-2xl font-bold text-white mb-2">
               Add New Student
             </h2>
-            <p className="text-purple-100">
-              Register students for fresher entry and generate access
-              eligibility.
+
+            <p className="text-orange-100">
+              Register freshers and grant event entry eligibility.
             </p>
           </button>
 
           <button
             onClick={() => navigate("/admin/students")}
-            className="bg-white/10 backdrop-blur-xl border border-purple-400/20 p-8 rounded-3xl text-left shadow-xl hover:scale-[1.02] transition"
+            className="rounded-3xl bg-white/10 backdrop-blur-xl border border-white/10 p-8 text-left shadow-xl hover:scale-[1.02] transition"
           >
+            <p className="text-sm text-orange-200 mb-2">DATABASE</p>
+
             <h2 className="text-2xl font-bold text-white mb-2">
-              See All Students
+              View All Students
             </h2>
-            <p className="text-purple-200">
-              View, manage, edit and monitor registered student entries.
+
+            <p className="text-gray-300">
+              Search, monitor and manage registered attendees.
             </p>
           </button>
         </div>

@@ -50,93 +50,90 @@ export default function UserDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0B1026] via-[#1A103D] to-[#2E1065] px-6 py-10">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] px-4 py-8">
+      {/* Glow Background */}
+      <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
+
+      <div className="relative z-10 max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
           <div>
-            <h1 className="text-4xl font-bold text-yellow-400">
-              Navrang'26 Digital Pass
+            <p className="text-orange-200 tracking-[0.3em] text-sm mb-2">
+              NAVRANG'26 PASS
+            </p>
+
+            <h1 className="text-4xl font-bold bg-linear-to-r from-yellow-300 via-orange-400 to-red-500 bg-clip-text text-transparent">
+              Digital Entry Pass
             </h1>
-            <p className="text-purple-200 mt-2">
-              Verified Fresher Party Entry Profile
+
+            <p className="text-gray-300 mt-2">
+              Your verified access credential for the event
             </p>
           </div>
 
           <button
             onClick={handleLogout}
-            className="px-5 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-medium"
+            className="px-5 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-medium shadow-lg"
           >
             Logout
           </button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white/10 backdrop-blur-xl border border-purple-400/20 rounded-3xl p-6 flex flex-col items-center">
-            <div className="w-28 h-28 rounded-full bg-linear-to-r from-purple-500 to-fuchsia-500 flex items-center justify-center text-4xl font-bold text-white mb-4">
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Profile Card */}
+          <div className="rounded-4xl bg-white/10 backdrop-blur-2xl border border-white/10 p-8 text-center shadow-[0_0_50px_rgba(251,146,60,0.12)]">
+            <div className="w-28 h-28 mx-auto rounded-full bg-linear-to-r from-orange-500 to-red-500 flex items-center justify-center text-4xl font-bold text-white mb-5">
               {student.name.charAt(0).toUpperCase()}
             </div>
 
             <h2 className="text-2xl font-bold text-white">{student.name}</h2>
 
-            <p className="text-purple-200 mt-1">Fresher Attendee</p>
+            <p className="text-gray-300 mt-1">Fresher Attendee</p>
 
-            <div className="mt-6 w-full">
-              <div className="bg-green-500/20 border border-green-400 text-green-300 rounded-xl px-4 py-2 text-center">
-                Entry Approved
-              </div>
+            <div className="mt-6 rounded-xl bg-green-500/20 border border-green-400 text-green-300 px-4 py-3">
+              Entry Approved
             </div>
           </div>
 
-          <div className="md:col-span-2 bg-white/10 backdrop-blur-xl border border-purple-400/20 rounded-3xl p-8">
-            <h3 className="text-2xl font-semibold text-yellow-400 mb-6">
-              Pass Information
+          {/* Pass Details */}
+          <div className="lg:col-span-2 rounded-4xl bg-white/10 backdrop-blur-2xl border border-white/10 p-8 shadow-[0_0_50px_rgba(251,146,60,0.12)]">
+            <h3 className="text-2xl font-semibold text-orange-300 mb-6">
+              Pass Details
             </h3>
 
-            <div className="grid md:grid-cols-2 gap-6 text-white mb-8">
-              <div>
-                <p className="text-purple-200 text-sm">Full Name</p>
-                <p>{student.name}</p>
-              </div>
-
-              <div>
-                <p className="text-purple-200 text-sm">Roll Number</p>
-                <p>{student.rollNo}</p>
-              </div>
-
-              <div>
-                <p className="text-purple-200 text-sm">Date of Birth</p>
-                <p>{student.dob}</p>
-              </div>
-
-              <div>
-                <p className="text-purple-200 text-sm">Event</p>
-                <p>Navrang'26</p>
-              </div>
-
-              <div>
-                <p className="text-purple-200 text-sm">Venue</p>
-                <p>IERT Auditorium</p>
-              </div>
-
-              <div>
-                <p className="text-purple-200 text-sm">Pass Type</p>
-                <p>Fresher Access</p>
-              </div>
+            <div className="grid md:grid-cols-2 gap-5 text-white mb-8">
+              <InfoCard label="Full Name" value={student.name} />
+              <InfoCard label="Roll Number" value={student.rollNo} />
+              <InfoCard label="Date of Birth" value={student.dob} />
+              <InfoCard label="Event" value="Navrang'26" />
+              <InfoCard label="Venue" value="IERT Auditorium" />
+              <InfoCard label="Pass Type" value="Fresher Access" />
             </div>
 
             <button
               onClick={downloadQR}
-              className="w-full py-3 rounded-full bg-linear-to-r from-purple-500 to-fuchsia-500 text-white font-semibold"
+              className="w-full py-3 rounded-full bg-linear-to-r from-orange-500 to-red-500 text-white font-semibold shadow-lg hover:scale-[1.02] transition"
             >
               Download QR Pass
             </button>
           </div>
         </div>
 
+        {/* Hidden QR */}
         <div ref={qrRef} className="hidden">
           <QRCodeCanvas value={profileURL} size={300} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function InfoCard({ label, value }) {
+  return (
+    <div className="rounded-2xl bg-white/5 border border-white/10 p-4">
+      <p className="text-sm text-orange-200 mb-1">{label}</p>
+      <p className="font-semibold text-white">{value}</p>
     </div>
   );
 }

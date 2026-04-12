@@ -40,44 +40,82 @@ export default function AllStudents() {
   );
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0B1026] via-[#1A103D] to-[#2E1065] p-6">
-      <div className="max-w-6xl mx-auto bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-purple-400/20">
-        <h1 className="text-3xl font-bold text-yellow-400 mb-6">
-          All Registered Students
+    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] px-4 py-8">
+      {/* Glow Background */}
+      <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto rounded-4xl border border-white/10 bg-white/10 backdrop-blur-2xl shadow-[0_0_50px_rgba(251,146,60,0.12)] p-8">
+        <p className="text-sm tracking-[0.3em] text-orange-200 mb-2">
+          STUDENT DATABASE
+        </p>
+
+        <h1 className="text-4xl font-bold bg-linear-to-r from-yellow-300 via-orange-400 to-red-500 bg-clip-text text-transparent mb-2">
+          Registered Attendees
         </h1>
 
-        <input
-          type="text"
-          placeholder="Search by Name or Roll Number..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full mb-6 p-3 rounded-xl bg-white/10 text-white border border-purple-300/20 outline-none"
-        />
+        <p className="text-gray-300 mb-6">
+          Search and manage all approved fresher registrations
+        </p>
 
+        {/* Search + Stats */}
+        <div className="grid md:grid-cols-4 gap-4 mb-6">
+          <div className="md:col-span-3">
+            <input
+              type="text"
+              placeholder="Search by Name or Roll Number..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
+            />
+          </div>
+
+          <div className="rounded-xl bg-white/5 border border-white/10 p-3 text-center">
+            <p className="text-xs text-orange-200">Total Students</p>
+            <p className="text-2xl font-bold text-white">{students.length}</p>
+          </div>
+        </div>
+
+        {/* Table */}
         {filteredStudents.length === 0 ? (
-          <p className="text-purple-200">No students found.</p>
+          <div className="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
+            <p className="text-gray-300">
+              No students found matching your search.
+            </p>
+          </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-2xl border border-white/10">
             <table className="w-full text-left text-white">
-              <thead>
-                <tr className="border-b border-purple-300/20">
-                  <th className="py-3">Name</th>
-                  <th className="py-3">Roll Number</th>
-                  <th className="py-3">DOB</th>
-                  <th className="py-3">Action</th>
+              <thead className="bg-white/5">
+                <tr>
+                  <th className="py-4 px-4">Name</th>
+                  <th className="py-4 px-4">Roll Number</th>
+                  <th className="py-4 px-4">DOB</th>
+                  <th className="py-4 px-4">Status</th>
+                  <th className="py-4 px-4">Action</th>
                 </tr>
               </thead>
 
               <tbody>
                 {filteredStudents.map((student, index) => (
-                  <tr key={index}>
-                    <td className="py-3">{student.name}</td>
-                    <td className="py-3">{student.rollNo}</td>
-                    <td className="py-3">{student.dob}</td>
-                    <td className="py-3">
+                  <tr
+                    key={index}
+                    className="border-t border-white/10 hover:bg-white/5 transition"
+                  >
+                    <td className="py-4 px-4">{student.name}</td>
+                    <td className="py-4 px-4">{student.rollNo}</td>
+                    <td className="py-4 px-4">{student.dob}</td>
+
+                    <td className="py-4 px-4">
+                      <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-300 text-sm">
+                        Approved
+                      </span>
+                    </td>
+
+                    <td className="py-4 px-4">
                       <button
                         onClick={() => handleDelete(student.rollNo)}
-                        className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg"
+                        className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white"
                       >
                         Delete
                       </button>
