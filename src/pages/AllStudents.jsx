@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+import { db } from "../firebase";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+
 export default function AllStudents() {
   const navigate = useNavigate();
 
@@ -16,21 +19,38 @@ export default function AllStudents() {
       return;
     }
 
-    const savedStudents = JSON.parse(localStorage.getItem("students")) || [];
-
-    setStudents(savedStudents);
+    fetchStudents();
   }, [navigate]);
 
-  const handleDelete = (rollNo) => {
-    const updatedStudents = students.filter(
-      (student) => student.rollNo !== rollNo,
-    );
+  const fetchStudents = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "students"));
 
-    setStudents(updatedStudents);
+      const studentsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    localStorage.setItem("students", JSON.stringify(updatedStudents));
+      setStudents(studentsData);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch students.");
+    }
+  };
 
-    toast.success("Student Deleted Successfully!");
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, "students", id));
+
+      const updatedStudents = students.filter((student) => student.id !== id);
+
+      setStudents(updatedStudents);
+
+      toast.success("Student Deleted Successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete student.");
+    }
   };
 
   const filteredStudents = students.filter(
@@ -41,7 +61,6 @@ export default function AllStudents() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] px-4 py-8">
-      {/* Glow Background */}
       <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
 
@@ -58,7 +77,6 @@ export default function AllStudents() {
           Search and manage all approved fresher registrations
         </p>
 
-        {/* Search + Stats */}
         <div className="grid md:grid-cols-4 gap-4 mb-6">
           <div className="md:col-span-3">
             <input
@@ -66,7 +84,7 @@ export default function AllStudents() {
               placeholder="Search by Name or Roll Number..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
+              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
             />
           </div>
 
@@ -76,7 +94,6 @@ export default function AllStudents() {
           </div>
         </div>
 
-        {/* Table */}
         {filteredStudents.length === 0 ? (
           <div className="rounded-2xl bg-white/5 border border-white/10 p-8 text-center">
             <p className="text-gray-300">
@@ -97,9 +114,9 @@ export default function AllStudents() {
               </thead>
 
               <tbody>
-                {filteredStudents.map((student, index) => (
+                {filteredStudents.map((student) => (
                   <tr
-                    key={index}
+                    key={student.id}
                     className="border-t border-white/10 hover:bg-white/5 transition"
                   >
                     <td className="py-4 px-4">{student.name}</td>
@@ -114,7 +131,7 @@ export default function AllStudents() {
 
                     <td className="py-4 px-4">
                       <button
-                        onClick={() => handleDelete(student.rollNo)}
+                        onClick={() => handleDelete(student.id)}
                         className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white"
                       >
                         Delete

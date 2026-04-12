@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+import { db } from "../firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
+
 export default function StudentLogin() {
   const navigate = useNavigate();
 
@@ -17,31 +20,43 @@ export default function StudentLogin() {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    const students = JSON.parse(localStorage.getItem("students")) || [];
+    try {
+      const studentsRef = collection(db, "students");
 
-    const matchedStudent = students.find(
-      (student) =>
-        student.rollNo === loginData.rollNo && student.dob === loginData.dob,
-    );
+      const q = query(
+        studentsRef,
+        where("rollNo", "==", loginData.rollNo),
+        where("dob", "==", loginData.dob),
+      );
 
-    if (!matchedStudent) {
-      toast.error("Invalid Credentials");
-      return;
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        toast.error("Invalid Credentials");
+        return;
+      }
+
+      const matchedStudent = {
+        id: querySnapshot.docs[0].id,
+        ...querySnapshot.docs[0].data(),
+      };
+
+      localStorage.setItem("loggedInStudent", JSON.stringify(matchedStudent));
+
+      toast.success("Login Successful!");
+
+      navigate("/user");
+    } catch (error) {
+      console.error(error);
+      toast.error("Login Failed");
     }
-
-    localStorage.setItem("loggedInStudent", JSON.stringify(matchedStudent));
-
-    toast.success("Login Successful!");
-
-    navigate("/user");
   };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] flex items-center justify-center px-4">
-      {/* Glow Background */}
       <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
 
@@ -66,7 +81,7 @@ export default function StudentLogin() {
             placeholder="Roll Number"
             value={loginData.rollNo}
             onChange={handleChange}
-            className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
+            className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
           />
 
           <div>

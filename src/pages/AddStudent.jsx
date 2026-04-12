@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
+import { db } from "../firebase";
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+
 export default function AddStudent() {
   const navigate = useNavigate();
 
@@ -26,7 +29,7 @@ export default function AddStudent() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!student.name || !student.rollNo || !student.dob) {
@@ -34,33 +37,38 @@ export default function AddStudent() {
       return;
     }
 
-    const existingStudents = JSON.parse(localStorage.getItem("students")) || [];
+    try {
+      const studentsRef = collection(db, "students");
 
-    const duplicateStudent = existingStudents.find(
-      (s) => s.rollNo.toLowerCase() === student.rollNo.toLowerCase(),
-    );
+      const duplicateQuery = query(
+        studentsRef,
+        where("rollNo", "==", student.rollNo),
+      );
 
-    if (duplicateStudent) {
-      toast.error("Student with this Roll Number already exists.");
-      return;
+      const duplicateSnapshot = await getDocs(duplicateQuery);
+
+      if (!duplicateSnapshot.empty) {
+        toast.error("Student with this Roll Number already exists.");
+        return;
+      }
+
+      await addDoc(studentsRef, student);
+
+      toast.success("Student Added Successfully!");
+
+      setStudent({
+        name: "",
+        rollNo: "",
+        dob: "",
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add student.");
     }
-
-    const updatedStudents = [...existingStudents, student];
-
-    localStorage.setItem("students", JSON.stringify(updatedStudents));
-
-    toast.success("Student Added Successfully!");
-
-    setStudent({
-      name: "",
-      rollNo: "",
-      dob: "",
-    });
   };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] flex items-center justify-center px-4 py-8">
-      {/* Glow Background */}
       <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
 
@@ -77,11 +85,7 @@ export default function AddStudent() {
           Register a fresher and grant digital event access credentials
         </p>
 
-        <form
-          onSubmit={handleSubmit}
-          noValidate
-          className="grid md:grid-cols-2 gap-5"
-        >
+        <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-5">
           <div>
             <label className="block text-sm text-orange-200 mb-2">
               Full Name
@@ -89,10 +93,10 @@ export default function AddStudent() {
             <input
               type="text"
               name="name"
-              placeholder="Enter student name"
               value={student.name}
               onChange={handleChange}
-              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
+              placeholder="Enter student name"
+              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
             />
           </div>
 
@@ -103,10 +107,10 @@ export default function AddStudent() {
             <input
               type="text"
               name="rollNo"
-              placeholder="Enter roll number"
               value={student.rollNo}
               onChange={handleChange}
-              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none placeholder:text-gray-400"
+              placeholder="Enter roll number"
+              className="w-full p-3 rounded-xl bg-white/5 text-white border border-white/10 outline-none"
             />
           </div>
 

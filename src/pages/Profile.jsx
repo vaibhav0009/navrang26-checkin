@@ -1,11 +1,42 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+import { db } from "../firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 export default function Profile() {
   const { id } = useParams();
 
-  const students = JSON.parse(localStorage.getItem("students")) || [];
+  const [student, setStudent] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const student = students.find((s) => s.rollNo === id);
+  useEffect(() => {
+    const fetchStudent = async () => {
+      try {
+        const q = query(collection(db, "students"), where("rollNo", "==", id));
+
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          setStudent(querySnapshot.docs[0].data());
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudent();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
 
   if (!student) {
     return (
@@ -24,12 +55,10 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] px-4 py-8">
-      {/* Glow Background */}
       <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-10">
           <p className="text-orange-200 tracking-[0.3em] text-sm mb-2">
             QR VERIFICATION
@@ -45,7 +74,6 @@ export default function Profile() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left Profile Card */}
           <div className="rounded-4xl bg-white/10 backdrop-blur-2xl border border-white/10 p-8 text-center shadow-[0_0_50px_rgba(251,146,60,0.12)]">
             <div className="w-28 h-28 mx-auto rounded-full bg-linear-to-r from-orange-500 to-red-500 flex items-center justify-center text-4xl font-bold text-white mb-5">
               {student.name.charAt(0).toUpperCase()}
@@ -60,7 +88,6 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Right Details */}
           <div className="lg:col-span-2 rounded-4xl bg-white/10 backdrop-blur-2xl border border-white/10 p-8 shadow-[0_0_50px_rgba(251,146,60,0.12)]">
             <h3 className="text-2xl font-semibold text-orange-300 mb-6">
               Attendee Information
