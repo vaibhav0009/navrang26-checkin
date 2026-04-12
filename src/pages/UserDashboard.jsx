@@ -49,7 +49,7 @@ export default function UserDashboard() {
 
   if (!student) return null;
 
-  const profileURL = `${window.location.origin}/profile/${student.rollNo}`;
+  const profileURL = "https://navrang26.vercel.app/profile/" + student.rollNo;
 
   const downloadQR = () => {
     const canvas = qrRef.current?.querySelector("canvas");
