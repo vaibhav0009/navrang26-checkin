@@ -57,7 +57,12 @@ export default function AddStudent() {
         return;
       }
 
-      await addDoc(studentsRef, student);
+      const passToken = crypto.randomUUID();
+
+      await addDoc(studentsRef, {
+        ...student,
+        passToken,
+      });
 
       toast.success("Student Added Successfully!");
 

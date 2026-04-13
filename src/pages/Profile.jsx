@@ -13,7 +13,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const q = query(collection(db, "students"), where("rollNo", "==", id));
+        const q = query(collection(db, "students"), where("passToken", "==", id));
 
         const querySnapshot = await getDocs(q);
 
