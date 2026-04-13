@@ -9,6 +9,8 @@ import AllStudents from "./pages/AllStudents";
 import StudentLogin from "./pages/StudentLogin";
 import UserDashboard from "./pages/UserDashboard";
 import Profile from "./pages/Profile";
+import EntryStaffDashboard from "./pages/EntryStaffDashboard";
+import EntryLogin from "./pages/EntryLogin";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path="/student-login" element={<StudentLogin />} />
         <Route path="/user" element={<UserDashboard />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/entry-login" element={<EntryLogin />} />
+        <Route path="/entry-dashboard" element={<EntryStaffDashboard />} />
       </Routes>
     </BrowserRouter>
   );

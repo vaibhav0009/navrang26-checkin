@@ -29,12 +29,19 @@ export default function Login() {
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 mt-4 w-52 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
+            <div className="absolute right-0 mt-4 w-56 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
               <button
                 onClick={() => navigate("/admin-login")}
                 className="w-full px-5 py-4 text-left hover:bg-white/10 transition"
               >
                 Admin Control Panel
+              </button>
+
+              <button
+                onClick={() => navigate("/entry-login")}
+                className="w-full px-5 py-4 text-left hover:bg-white/10 transition border-t border-white/10"
+              >
+                Entry Staff Login
               </button>
             </div>
           )}
