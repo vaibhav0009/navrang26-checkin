@@ -62,6 +62,8 @@ export default function AddStudent() {
       await addDoc(studentsRef, {
         ...student,
         passToken,
+        isCheckedIn: false,
+        checkedInAt: null,
       });
 
       toast.success("Student Added Successfully!");
