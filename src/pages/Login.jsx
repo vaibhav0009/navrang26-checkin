@@ -1,13 +1,48 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { getAuth } from "firebase/auth";
+import { db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
+
 export default function Login() {
   const navigate = useNavigate();
+  const auth = getAuth();
+
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const handleProtectedNavigation = async (targetRole) => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      navigate(targetRole === "admin" ? "/admin-login" : "/entry-login");
+      return;
+    }
+
+    try {
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+
+      if (!userDoc.exists()) {
+        navigate("/");
+        return;
+      }
+
+      const role = userDoc.data().role;
+
+      if (role !== targetRole) {
+        navigate(targetRole === "admin" ? "/admin-login" : "/entry-login");
+        return;
+      }
+
+      navigate(targetRole === "admin" ? "/admin" : "/entry-dashboard");
+    } catch (error) {
+      console.error(error);
+      navigate("/");
+    }
+  };
+
   return (
-    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] text-white">
-      {/* Background Glow */}
+    <div className="min-h-screen relative overflow-hidden bg-linear-to-br from-[#0B1020] via-[#111827] to-[#1F2937] text-white flex flex-col">
       <div className="absolute top-0 left-0 w-80 h-80 bg-orange-500/20 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-red-500/15 rounded-full blur-3xl"></div>
       <div className="absolute top-1/2 left-1/2 w-120 h-120 bg-yellow-400/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -31,14 +66,14 @@ export default function Login() {
           {menuOpen && (
             <div className="absolute right-0 mt-4 w-56 rounded-3xl bg-black/80 backdrop-blur-xl border border-white/10 shadow-xl overflow-hidden">
               <button
-                onClick={() => navigate("/admin-login")}
+                onClick={() => handleProtectedNavigation("admin")}
                 className="w-full px-5 py-4 text-left hover:bg-white/10 transition"
               >
                 Admin Control Panel
               </button>
 
               <button
-                onClick={() => navigate("/entry-login")}
+                onClick={() => handleProtectedNavigation("entryStaff")}
                 className="w-full px-5 py-4 text-left hover:bg-white/10 transition border-t border-white/10"
               >
                 Entry Staff Login
@@ -48,9 +83,8 @@ export default function Login() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 grid md:grid-cols-2 gap-12 items-center">
-        {/* Left Content */}
+      {/* Hero */}
+      <section className="relative z-10 flex-1 max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <p className="text-sm tracking-[0.4em] text-orange-200 mb-4">
             IERT PRESENTS
@@ -65,8 +99,8 @@ export default function Login() {
           </p>
 
           <p className="text-gray-300 max-w-lg mb-8 leading-relaxed">
-            Secure your digital entry pass for the most vibrant night of the
-            year. Celebrate culture, talent, music and unforgettable memories.
+            Secure your digital pass for a day of celebration, culture, music
+            and unforgettable memories.
           </p>
 
           <button
@@ -77,7 +111,6 @@ export default function Login() {
           </button>
         </div>
 
-        {/* Right Event Highlights */}
         <div className="rounded-4xl border border-white/10 bg-white/10 backdrop-blur-2xl p-8 shadow-[0_0_60px_rgba(251,146,60,0.15)]">
           <h3 className="text-2xl font-bold text-orange-300 mb-6">
             Event Highlights
@@ -92,7 +125,6 @@ export default function Login() {
         </div>
       </section>
 
-      {/* Footer */}
       <p className="relative z-10 text-center text-xs text-gray-400 pb-6">
         Powered by IERT Event Management System
       </p>
