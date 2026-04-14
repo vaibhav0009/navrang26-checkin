@@ -114,6 +114,7 @@ export default function AllStudents() {
                   <th className="py-4 px-4">Roll Number</th>
                   <th className="py-4 px-4">DOB</th>
                   <th className="py-4 px-4">Status</th>
+                  <th className="py-4 px-4">Checked In At</th>
                   <th className="py-4 px-4">Action</th>
                 </tr>
               </thead>
@@ -129,15 +130,27 @@ export default function AllStudents() {
                     <td className="py-4 px-4">{student.dob}</td>
 
                     <td className="py-4 px-4">
-                      <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-300 text-sm">
-                        Approved
-                      </span>
+                      {student.isCheckedIn ? (
+                        <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-300 text-sm font-medium">
+                          Entered
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-300 text-sm font-medium">
+                          Pending
+                        </span>
+                      )}
+                    </td>
+
+                    <td className="py-4 px-4 text-sm text-gray-300">
+                      {student.checkedInAt?.toDate
+                        ? student.checkedInAt.toDate().toLocaleString()
+                        : "--"}
                     </td>
 
                     <td className="py-4 px-4">
                       <button
                         onClick={() => handleDelete(student.id)}
-                        className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white"
+                        className="px-3 py-1 rounded-lg bg-red-500 hover:bg-red-600 text-white"
                       >
                         Delete
                       </button>
